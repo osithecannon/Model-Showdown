@@ -30,7 +30,7 @@ def ask_stakeholder_agent(user_question, chat_history):
     messages.append({"role": "user", "content": user_question})
     
     response = client.chat.completions.create(
-        model="llama3-8b-8192",
+        model="llama-3.1-8b-instant",
         messages=messages,
         temperature=0.3
     )
