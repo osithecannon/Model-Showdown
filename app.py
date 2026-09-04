@@ -48,26 +48,28 @@ with tab1:
         age = st.slider("Age (Years)", 18, 75, 30)
 
     if st.button("Calculate Risk Score"):
-        # Construct a zero-initialized dataframe matching training columns
-        input_df = pd.DataFrame(np.zeros((1, len(feature_names))), columns=feature_names)
-        
-        # Assign numeric input values if features exist in training columns
-        for col in input_df.columns:
-            if col.lower() == "duration":
-                input_df[col] = duration
-            elif col.lower() == "amount":
-                input_df[col] = amount
-            elif col.lower() == "age":
-                input_df[col] = age
+    # Create empty row matching your model's expected column list
+    input_data = pd.DataFrame(0, index=[0], columns=feature_names)
 
-        # Scale and run prediction
-        scaled_input = scaler.transform(input_df)
-        risk_prob = model.predict_proba(scaled_input)[0][1]
-        
-        if risk_prob > 0.5:
-            st.error(f"High Risk Flagged — Default Probability: {risk_prob:.2%}")
-        else:
-            st.success(f"Low Risk Approved — Default Probability: {risk_prob:.2%}")
+    # Assign UI inputs to matching German column names
+    if "laufzeit" in input_data.columns:
+        input_data["laufzeit"] = duration
+
+    if "hoehe" in input_data.columns:
+        input_data["hoehe"] = credit_amount
+
+    if "alter" in input_data.columns:
+        input_data["alter"] = age
+
+    # Scale and predict probability
+    scaled_data = scaler.transform(input_data)
+    prob = model.predict_proba(scaled_data)[0][1]
+
+    # Output dynamic risk score
+    if prob >= 0.5:
+        st.error(f"High Risk Flagged — Default Probability: {prob * 100:.2f}%")
+    else:
+        st.success(f"Low Risk Approved — Default Probability: {prob * 100:.2f}%")
 
 with tab2:
     st.subheader("Stakeholder AI Advisor")
