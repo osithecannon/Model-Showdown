@@ -56,7 +56,7 @@ with tab1:
             input_data["laufzeit"] = duration
 
         if "hoehe" in input_data.columns:
-            input_data["hoehe"] = credit_amount
+            input_data["hoehe"] = amount
 
         if "alter" in input_data.columns:
             input_data["alter"] = age
